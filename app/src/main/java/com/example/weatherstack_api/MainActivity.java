@@ -4,15 +4,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 //
 import android.content.Context;
+import android.widget.Toast;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,69 +30,52 @@ public class MainActivity extends AppCompatActivity {
 //            "http://api.weatherstack.com/current?access_key=" + APIKEY +"&query=Palatine%Illinois%USA"
 
     private TextView output;
+    private Button button;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         output = findViewById(R.id.output);
-        // Call the fetchData method to fetch and parse JSON data
-        fetchData(this, url, new VolleyCallback() {
-
+        button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onSuccess(String result) {
-                Log.i(tag,"cSuccess");
+            public void onClick(View view){
 
-                output.setText(result);
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                Log.i(tag,"cError");
-
-                output.setText(errorMessage);
             }
         });
     }
-    public interface VolleyCallback {
-        void onSuccess(String result);
-        void onError(String errorMessage);
-    }
-    public void fetchData(Context context, String url, final VolleyCallback callback) {
-        RequestQueue queue = Volley.newRequestQueue(context);
-        Log.i(tag,"c1");
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(
+    public void fetchData(){
+        RequestQueue queue = Volley.newRequestQueue(this);
 
-                Request.Method.GET, url, null,
-                response -> {
-                    // Parsing the JSON response
-                    Log.i(tag,"c2");
-
-                    try {
-                        // Assuming you expect a JSON object with a "data" field
-                        String data = response.optString("data");
-                        Log.i(tag,"c3");
-
-                        if (data != null) {
-                            callback.onSuccess(data);
-                        } else {
-                            callback.onError("Data not found in the response");
-                        }
-                    } catch (Exception e) {
-                        Log.i(tag,"c4");
-
-                        e.printStackTrace();
-                        callback.onError("JSON parsing error");
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        parseJson(response);
                     }
-                },
-                error -> {
-                    Log.i(tag,"c5");
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                output.setText("That didn't work!");
+            }
+        });
 
-                    callback.onError("Network request failed");
-                }
-        );
-        Log.i(tag,"c6");
-
-        queue.add(jsonRequest);
+        queue.add(stringRequest);
     }
+    public void parseJson(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("location");
+            String name, country, region;
+            name = jsonObject.getString("name");
+            country = jsonObject.getString("country");
+            region = jsonObject.getString("region");
+            output.append(("Name:" + name +"Region:" + region +"Country:" + country));
+
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+    }
+
 
 }
