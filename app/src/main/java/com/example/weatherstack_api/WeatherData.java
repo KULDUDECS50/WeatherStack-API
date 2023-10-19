@@ -1,45 +1,37 @@
 package com.example.weatherstack_api;
 
 public class WeatherData {
-    private Location location;
-    private Current current;
+    private String name;
+    private String country;
+    private String region;
 
-    public Location getLocation() {
-        return location;
+    public WeatherData(String name, String country, String region) {
+        this.name = name;
+        this.country = country;
+        this.region = region;
     }
 
-    public Current getCurrent() {
-        return current;
+    public String getName() {
+        return name;
     }
 
-    public class Location {
-        private String name;
-        private String region;
-        private String country;
-
-        public String getName() {
-            return name;
-        }
-
-        public String getRegion() {
-            return region;
-        }
-
-        public String getCountry() {
-            return country;
-        }
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public class Current {
-        private double temperature;
-        private String weather_descriptions;
+    public String getCountry() {
+        return country;
+    }
 
-        public double getTemperature() {
-            return temperature;
-        }
+    public void setCountry(String country) {
+        this.country = country;
+    }
 
-        public String getWeather_descriptions() {
-            return weather_descriptions;
-        }
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 }

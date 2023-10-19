@@ -18,6 +18,8 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,7 +27,7 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
     private final String APIKEY = "7d8a814c0980cee604caf0d079c10a6f";
-    public final String tag = "ku";
+    public final String tag = "kuldeep";
     private String url = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=Palatine%Illinois%USA";
 //            "http://api.weatherstack.com/current?access_key=" + APIKEY +"&query=Palatine%Illinois%USA"
 
@@ -40,37 +42,61 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-
+                fetchData();
             }
         });
     }
     public void fetchData(){
         RequestQueue queue = Volley.newRequestQueue(this);
-
+        String url = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=Palatine%Illinois%USA";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
-                    @Override
+
+            @Override
                     public void onResponse(String response) {
-                        parseJson(response);
+                    GsonBuilder gsonBuilder = new GsonBuilder();
+                    Gson gson = gsonBuilder.create();
+                try {
+                    //new way
+
+
+                    //old way
+                    WeatherData weatherData =
+
+                    String name, country, region;
+                    Log.i(tag,jsonObject.toString());
+                    name = jsonObject.getString("name");
+                    country = jsonObject.getString("country");
+                    region = jsonObject.getString("region");
+                    output.append(("Name:" + name +"Region:" + region +"Country:" + country));
+
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                        output.setText(response.substring(0,50));
                     }
                 }, new Response.ErrorListener() {
+
             @Override
             public void onErrorResponse(VolleyError error) {
                 output.setText("That didn't work!");
             }
+
         });
 
         queue.add(stringRequest);
     }
     public void parseJson(String response){
         try {
-            JSONObject jsonObject = new JSONObject(response);
-            JSONArray jsonArray = jsonObject.getJSONArray("location");
-            String name, country, region;
-            name = jsonObject.getString("name");
-            country = jsonObject.getString("country");
-            region = jsonObject.getString("region");
-            output.append(("Name:" + name +"Region:" + region +"Country:" + country));
+            JSONObject jsonObject = new JSONObject("location");
+
+                String name, country, region;
+                Log.i(tag,jsonObject.toString());
+                name = jsonObject.getString("name");
+                country = jsonObject.getString("country");
+                region = jsonObject.getString("region");
+                output.append(("Name:" + name +"Region:" + region +"Country:" + country));
 
         }catch (JSONException e){
             e.printStackTrace();
