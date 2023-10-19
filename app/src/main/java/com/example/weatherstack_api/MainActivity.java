@@ -2,10 +2,12 @@ package com.example.weatherstack_api;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 //
 import android.content.Context;
@@ -28,17 +30,26 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
     private final String APIKEY = "7d8a814c0980cee604caf0d079c10a6f";
     public final String tag = "kuldeep";
-    private String url = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=Palatine%Illinois%USA";
+    private String url = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=Palatine%Illinois%USA/";
 //            "http://api.weatherstack.com/current?access_key=" + APIKEY +"&query=Palatine%Illinois%USA"
-
+//
+    private String city, country, region, observationTime;
+    private int temperature;
+    //            Log.i("kuldeep", city + ", " + country + ", " + region + ", " + observationTime + ", " + temperature);
+    //
     private TextView output;
     private Button button;
+    private EditText cityET, stateET;
+    Location loc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         output = findViewById(R.id.output);
         button = findViewById(R.id.button);
+        cityET = findViewById(R.id.cityET);
+        stateET = findViewById(R.id.stateET);
+
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
@@ -47,39 +58,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void fetchData(){
+        String city = cityET.getText().toString();
+        String state = stateET.getText().toString();
+
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=Palatine%Illinois%USA";
+        String url = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=" + city+ "%" + state +"%"+ "USA";
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
 
-            @Override
+                    @Override
                     public void onResponse(String response) {
-                    GsonBuilder gsonBuilder = new GsonBuilder();
-                    Gson gson = gsonBuilder.create();
-                try {
-                    //new way
-
-
-                    //old way
-                    WeatherData weatherData =
-
-                    String name, country, region;
-                    Log.i(tag,jsonObject.toString());
-                    name = jsonObject.getString("name");
-                    country = jsonObject.getString("country");
-                    region = jsonObject.getString("region");
-                    output.append(("Name:" + name +"Region:" + region +"Country:" + country));
-
-                }catch (JSONException e){
-                    e.printStackTrace();
-                }
-
-                        output.setText(response.substring(0,50));
+                        parseJson(response);
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
+                Log.i("kuldeep", "error response: " + error.getMessage());
                 output.setText("That didn't work!");
             }
 
@@ -88,19 +84,38 @@ public class MainActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
     public void parseJson(String response){
+
+        Log.i("kuldeep", "response received!");
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
         try {
-            JSONObject jsonObject = new JSONObject("location");
+            String jsonResponse  = gson.fromJson(response, String.class);
+            JSONObject jsonObject = new JSONObject(jsonResponse);
 
-                String name, country, region;
-                Log.i(tag,jsonObject.toString());
-                name = jsonObject.getString("name");
-                country = jsonObject.getString("country");
-                region = jsonObject.getString("region");
-                output.append(("Name:" + name +"Region:" + region +"Country:" + country));
+            // Access specific parts of the data
+            JSONObject request = jsonObject.getJSONObject("request");
+            city = request.getString("query");
 
-        }catch (JSONException e){
+            JSONObject location = jsonObject.getJSONObject("location");
+            country = location.getString("country");
+            region = location.getString("region");
+
+            JSONObject current = jsonObject.getJSONObject("current");
+            observationTime = current.getString("observation_time");
+            temperature = current.getInt("temperature");
+            Log.i("kuldeep", city + ", " + country + ", " + region + ", " + observationTime + ", " + temperature);
+
+
+        }
+
+
+        catch (Exception e){
             e.printStackTrace();
         }
+        Log.i("kuldeep", response);
+        output.setText("Hello World");
+
+
     }
 
 
