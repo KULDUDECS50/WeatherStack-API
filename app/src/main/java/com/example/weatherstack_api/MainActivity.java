@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-//
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,7 +18,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-//import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
     private final String APIKEY = "7d8a814c0980cee604caf0d079c10a6f";
@@ -34,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     private Button button;
     private EditText cityET, regionET;
     ImageView image;
-    WeatherResponse loc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +53,12 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         cityET = findViewById(R.id.cityET);
         regionET = findViewById(R.id.regionET);
+        image = findViewById(R.id.imageView);
     }
 
     public void fetchData(String city, String region){
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = API_REQUEST + city+ "%" + region+"//";
+        String url = API_REQUEST + city+ "%" + region+"&units=f";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
 
@@ -73,14 +71,19 @@ public class MainActivity extends AppCompatActivity {
 
                             String cityName = weatherResponse.getLocation().getName();
                             String currentTime = weatherResponse.getCurrent().getObservation_time();
-                            int temperature = weatherResponse.getCurrent().getTemperature();
+                            double temperature = weatherResponse.getCurrent().getTemperature();
+                            //given in celcius
+                            //now converted to farnheit
+//                            temperature = (temperature * (9.0/5)) + 32;
                             String[] weatherIcons = weatherResponse.getCurrent().getWeather_icons();
                             String imgURL = weatherIcons[0];
+                            Log.i(TAG, imgURL);
+
 
                             // Create a formatted string with the weather data
                             String weatherInfo = "City: " + cityName + "\n" +
                                     "Time: " + currentTime + "\n" +
-                                    "Temperature: " + temperature + "°C";
+                                    "Temperature: " + temperature + "°F";
 
                             // Set the text of the TextView
                             output.setText(weatherInfo);

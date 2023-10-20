@@ -89,7 +89,7 @@ public class WeatherResponse {
 
     public static class Current {
         private String observation_time;
-        private int temperature;
+        private double temperature;
         private int weather_code;
         private String[] weather_icons;
         private String[] weather_descriptions;
@@ -109,7 +109,7 @@ public class WeatherResponse {
             return observation_time;
         }
 
-        public int getTemperature() {
+        public double getTemperature() {
             return temperature;
         }
 
