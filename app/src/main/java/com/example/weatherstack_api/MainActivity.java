@@ -23,42 +23,44 @@ import com.google.gson.JsonSyntaxException;
 
 public class MainActivity extends AppCompatActivity {
     private final String APIKEY = "7d8a814c0980cee604caf0d079c10a6f";
-    public final String tag = "kuldeep";
-    private String url = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=Palatine%Illinois%USA/";
-//            "http://api.weatherstack.com/current?access_key=" + APIKEY +"&query=Palatine%Illinois%USA"
-//
-    private String city, country, region, observationTime;
-    private int temperature;
-    //            Log.i("kuldeep", city + ", " + country + ", " + region + ", " + observationTime + ", " + temperature);
-    //
+    private final String TAG = "Kuldeep";
+    private final String API_REQUEST = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=";
+//            "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=";
+
+    public String city;
+    public String region;
+
     private TextView output;
     private Button button;
-    private EditText cityET, stateET;
+    private EditText cityET, regionET;
     ImageView image;
     WeatherResponse loc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        output = findViewById(R.id.output);
-        button = findViewById(R.id.button);
-        cityET = findViewById(R.id.cityET);
-        stateET = findViewById(R.id.stateET);
+        setUp();
 
         button.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                fetchData();
+                city = cityET.getText().toString();
+                region = regionET.getText().toString();
+
+                fetchData(city, region);
             }
         });
     }
-    public void fetchData(){
-        String city = cityET.getText().toString();
-        String state = stateET.getText().toString();
+    private void setUp(){
+        output = findViewById(R.id.output);
+        button = findViewById(R.id.button);
+        cityET = findViewById(R.id.cityET);
+        regionET = findViewById(R.id.regionET);
+    }
 
+    public void fetchData(String city, String region){
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=" + city+ "%" + state +"%"+ "USA";
-
+        String url = API_REQUEST + city+ "%" + region+"//";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
 
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.i("kuldeep", "error response: " + error.getMessage());
+                Log.i(TAG, "error response: " + error.getMessage());
                 output.setText("That didn't work!");
             }
 
