@@ -19,7 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
     private final String APIKEY = "7d8a814c0980cee604caf0d079c10a6f";
