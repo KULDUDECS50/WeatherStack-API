@@ -14,6 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import java.text.ParseException;
@@ -32,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView output;
     private Button button;
     private EditText cityET, regionET;
-    ImageView image;
+    ImageView imageView;
 
     // Called when the activity is first created
     @Override
@@ -61,10 +62,18 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         cityET = findViewById(R.id.cityET);
         regionET = findViewById(R.id.regionET);
-        image = findViewById(R.id.imageView);
+        imageView = findViewById(R.id.imageView);
     }
 
     // Method to fetch weather data from API
+    /**
+     * Send an API request with user given city and region
+     * Parses the JSON response
+     * Outputs the given data in a simplified manner in the TextView
+     *
+     * @param city city title
+     * @param region region title
+     * */
     public void fetchData(String city, String region){
         // Setting up Volley request queue
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -75,14 +84,14 @@ public class MainActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     // Callback method called on successful API response
                     @Override
-                    public void onResponse(String response) {
-                        try {
-                            // Using Gson to convert API response to a Java object
-                            Gson gson = new Gson();
-                            WeatherResponse weatherResponse = gson.fromJson(response, WeatherResponse.class);
+                        public void onResponse(String response) {
+                            try {
+                                // Using Gson to convert API response to a Java object
+                                Gson gson = new Gson();
+                                WeatherResponse weatherResponse = gson.fromJson(response, WeatherResponse.class);
 
-                            // Extracting data from the response
-                            String cityName = weatherResponse.getLocation().getName();
+                                // Extracting data from the response
+                                String cityName = weatherResponse.getLocation().getName();
                             String currentTime = weatherResponse.getLocation().getLocaltime();
                             double temperature = weatherResponse.getCurrent().getTemperature();
                             String[] weatherIcons = weatherResponse.getCurrent().getWeather_icons();
@@ -96,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
                             // Displaying the formatted data on UI
                             output.setText(weatherInfo);
+                            Glide.with(MainActivity.this).load(imgURL).into(imageView);
 
                             // Uncomment the below line to set image using Picasso
                             // Picasso.get().load(imgURL).into(image);
