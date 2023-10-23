@@ -1,9 +1,20 @@
 package com.example.weatherstack_api;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * Represents the main structure of the JSON response from the WeatherStack API.
+ * This class is composed of nested classes representing the different sections of the JSON response.
+ */
 public class WeatherResponse {
+
     private Request request;
     private Location location;
     private Current current;
 
+    // Getters for the top-level objects in the JSON structure
     public Request getRequest() {
         return request;
     }
@@ -16,12 +27,16 @@ public class WeatherResponse {
         return current;
     }
 
+    /**
+     * Represents the 'request' section of the JSON response.
+     */
     public static class Request {
         private String type;
         private String query;
         private String language;
         private String unit;
 
+        // Standard getters for the fields
         public String getType() {
             return type;
         }
@@ -39,6 +54,10 @@ public class WeatherResponse {
         }
     }
 
+    /**
+     * Represents the 'location' section of the JSON response.
+     * Contains details about the location for which the weather data has been fetched.
+     */
     public static class Location {
         private String name;
         private String country;
@@ -50,6 +69,7 @@ public class WeatherResponse {
         private long localtime_epoch;
         private String utc_offset;
 
+        // Standard getters for the fields
         public String getName() {
             return name;
         }
@@ -74,8 +94,14 @@ public class WeatherResponse {
             return timezone_id;
         }
 
-        public String getLocaltime() {
-            return localtime;
+        /**
+         * Convert the 'localtime' from the format "yyyy-MM-dd HH:mm" to "HH:mm MM/dd/yyyy".
+         */
+        public String getLocaltime() throws ParseException {
+            SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm MM/dd/yyyy");
+            Date date = inputFormat.parse(localtime);
+            return outputFormat.format(date);
         }
 
         public long getLocaltime_epoch() {
@@ -87,6 +113,10 @@ public class WeatherResponse {
         }
     }
 
+    /**
+     * Represents the 'current' section of the JSON response.
+     * Contains the actual weather data for the specified location.
+     */
     public static class Current {
         private String observation_time;
         private double temperature;
@@ -105,6 +135,7 @@ public class WeatherResponse {
         private int visibility;
         private String is_day;
 
+        // Standard getters for the fields
         public String getObservation_time() {
             return observation_time;
         }
