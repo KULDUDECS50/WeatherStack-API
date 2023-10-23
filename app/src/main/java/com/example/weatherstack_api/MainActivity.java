@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                             String weatherInfo = "City: " + cityName + "\n" +
                                     "Time: " + currentTime + "\n" +
                                     "Temperature: " + temperature + "°F";
-
+        
                             // Displaying the formatted data on UI
                             output.setText(weatherInfo);
                             Glide.with(MainActivity.this).load(imgURL).into(imageView);
