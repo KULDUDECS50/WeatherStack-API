@@ -14,7 +14,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.bumptech.glide.Glide;
+//import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import java.text.ParseException;
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         
                             // Displaying the formatted data on UI
                             output.setText(weatherInfo);
-                            Glide.with(MainActivity.this).load(imgURL).into(imageView);
+                            //Glide.with(MainActivity.this).load(imgURL).into(imageView);
 
                             // Uncomment the below line to set image using Picasso
                             // Picasso.get().load(imgURL).into(image);
