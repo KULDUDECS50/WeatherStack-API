@@ -21,10 +21,10 @@ import java.text.ParseException;
 
 public class MainActivity extends AppCompatActivity {
     // Constants: API Key and Endpoint URL
-    private final String APIKEY = "7d8a814c0980cee604caf0d079c10a6f";
-    private final String TAG = "Kuldeep";
-    private final String API_REQUEST = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=";
-
+/*    private final String APIKEY = "7d8a814c0980cee604caf0d079c10a6f";
+      private final String TAG = "Kuldeep";
+   private final String API_REQUEST = "http://api.weatherstack.com/current?access_key=7d8a814c0980cee604caf0d079c10a6f&query=";
+*/
     // Variables to store user input
     public String city;
     public String region;
@@ -76,11 +76,14 @@ public class MainActivity extends AppCompatActivity {
      * */
     public void fetchData(String city, String region){
         // Setting up Volley request queue
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = API_REQUEST + city+ "%" + region+"&units=f"; // Constructing the complete API URL
+//        RequestQueue queue = Volley.newRequestQueue(this);
+//        String url = API_REQUEST + city+ "%" + region+"&units=f"; // Constructing the complete API URL
 
         // Creating a string request to fetch data
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+
+        // commenting out to manage api usage
+
+        /* StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     // Callback method called on successful API response
                     @Override
@@ -128,5 +131,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Adding the request to the queue to be executed
         queue.add(stringRequest);
+*/
     }
 }
